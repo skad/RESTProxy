@@ -164,9 +164,9 @@ class RESTProxy {
 		// Delete some original headers
 		unset($headers['host']);
 		unset($headers['Origin']);
-		unset($headers['x-RESTProxy-Host']);
-		unset($headers['x-RESTProxy-Port']);
-		unset($headers['x-RESTProxy-HTTPS']);
+		unset($headers['X-RESTPROXY-HOST']);
+		unset($headers['X-RESTPROXY-PORT']);
+		unset($headers['X-RESTPROXY-HTTPS']);
 		unset($headers['Referer']);
 		// Currently we do not support gz encoding
 		unset($headers['Accept-Encoding']);
@@ -178,7 +178,8 @@ class RESTProxy {
 		}
 
 		//Build the url
-		$c_url = ($this->Https)? "https" : "http" . '://';
+		$c_url = ($this->Https)? "https" : "http";
+		$c_url .= '://';
 		$c_url .= $this->Host . ':' . $this->Port . '/' . $this->_G . '?' . $this->_RawGET;
 		/*
 		var_dump($c_url);
@@ -190,6 +191,9 @@ class RESTProxy {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		// Use the headers
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+		// Skip SSL verification
+		curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 		if ($_SERVER['REQUEST_METHOD'] != "GET"){
 			if ($_SERVER['REQUEST_METHOD'] == "POST"){
